@@ -31,21 +31,20 @@ export default {
     routerSwitch(to, from) {
       switch (to.path) {
         case '/':
-          this.titleText = to.meta.title
+          this.titleText = '活动列表' // to.meta.title
           this.buttonText = '新建'
           break
         case '/info':
-          this.titleText = to.meta.title
+          this.titleText = '活动详情' // to.meta.title
           this.buttonText = '编辑'
           break
         case '/info/add':
-          this.titleText = this.$route.query.t ? to.meta.title[1] : to.meta.title[0]
+          this.titleText = this.$route.query.t ? '编辑活动' : '新建活动' // to.meta.title[1] : to.meta.title[0]
           this.buttonText = null // this.$route.query.t ? '保存' : '确定'
           break
       }
     },
     onClickLeft() {
-      // this.$route.path !== '/' ? this.$router.go(-1) : null
       this.$router.go(-1)
     },
     onClickRight() {
