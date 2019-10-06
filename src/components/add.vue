@@ -1,6 +1,5 @@
 <template>
   <div class="wrap add">
-    <!-- <h2 class="__title">基本信息</h2> -->
     <van-cell-group title="基本设置">
       <van-field
         v-model="title"
@@ -25,7 +24,6 @@
         />
       </van-cell>
     </van-cell-group>
-    <!-- <h2 class="__title">奖品信息</h2> -->
     <van-cell-group title="奖品设置">
       <van-swipe-cell
         v-for="(item, index) in jpList"
@@ -36,16 +34,6 @@
         :stop-propagation="true"
         disabled
       >
-        <!-- <van-cell :title="item.title">
-          <div style="float: right">
-            <van-stepper
-              v-model="item.count"
-              input-width="30px"
-              button-size="22px"
-            />
-          </div>
-        </van-cell> -->
-
         <van-cell style="padding: 0;">
           <van-field
             :ref="'vf' + (index)"
@@ -146,23 +134,6 @@
         </van-picker>
       </van-popup>
     </van-cell-group>
-    <!-- <van-cell-group title="抽取设置">
-      <van-cell title="中奖名额">
-        <van-stepper
-          v-model="quota"
-          max="999"
-          input-width="30px"
-          button-size="22px"
-        />
-      </van-cell>
-    </van-cell-group> -->
-    <!-- <div style="padding: 1rem;">
-      <van-button
-        @click="save()"
-        color="linear-gradient(to right, #4bb0ff, #6149f6)"
-        size="large"
-      >确定</van-button>
-    </div> -->
     <van-cell-group style="margin: 3rem 0;">
       <van-cell
         @click="save"
@@ -239,11 +210,8 @@ export default {
         // document.getElementById('__add').scrollIntoView()
         this.$refs['vf' + (this.jpList.length - 1)][0].focus()
       }, 10)
-      // console.log(this.$refs[Object.keys(this.$refs)[Object.keys().length - 1]])
-      // console.log(this.$refs['vf' + (this.jpList.length - 2)])
     },
     clickDel(ref) {
-      // console.log(ref[0])
       ref[0].open('right')
     },
     onClose(clickPosition, instance, detail) {
@@ -256,7 +224,6 @@ export default {
           instance.close()
           break
         case 'right':
-          // console.log(this.jpList[detail.name])
           instance.close()
           setTimeout(() => {
             this.jpList.splice(detail.name, 1)
@@ -266,8 +233,8 @@ export default {
     },
     loadCjUser() {
       if (this.cjList.length <= 0) return
-      this.isCoverUser = false
-      this.isFilterZjUser = true
+      // this.isCoverUser = false
+      // this.isFilterZjUser = true
       this.showPicker = true
     },
     isCoverUserChange(checked) {
@@ -277,8 +244,10 @@ export default {
       this.showPicker = false
     },
     confirmCjUserPicker(value, index) {
+      // 从活动列表中获取参与用户列表，并用 filter 过滤已中奖的用户
       const cj = this.cjList.find(item => item.title === value),
         user = this.isFilterZjUser ? cj.user.filter(item => !cj.zjUser.includes(item)) : cj.user
+      // 用户点确定时弹框询问是否导入，这里的样式有点 bug 所以暂时不启用
       // this.$dialog
       //   .confirm({
       //     title: '确认导入',
@@ -292,9 +261,10 @@ export default {
       //   .catch(() => {
       //     // 取消
       //   })
-      this.user = this.isCoverUser ? user.join('\n') : this.user + (this.user ? '\n' : '') + user.join('\n')
+      this.user = this.isCoverUser ? user.join('\n') : this.user + (this.user ? '\n' : '') + user.join('\n') // 判断是否是覆盖模式
       this.showPicker = false
       this.$toast.success('导入成功')
+      // 延迟一段时间后再滚动，因为改变了 textarea 高度之后页面并不是立即自动滚动至顶部的
       setTimeout(() => {
         document.getElementById('_load_user').scrollIntoView()
       }, 10)
@@ -307,21 +277,24 @@ export default {
       if (u) {
         u = u.filter(item => item)
       }
+      // 处理用户名后面的 *N 倍，循环生成重复名额
       let u1 = []
       for (let i = 0; i < u.length; i++) {
         let _count = u[i].match(_RegExCount) || [],
           _countNumber = _count.length > 0 ? _count[0].match(_RegExpNumber) : null
+        // 判断是否有倍数文本
         if (_count && _countNumber) {
-          u[i] = u[i].replace(_count[0], '')
+          u[i] = u[i].replace(_count[0], '') // 先替换掉倍数文本用做参考名（也就是移除倍数文本后的原始用户名）
+          // 按照倍数循环生成重复用户名
           for (let ig = 0; ig < _countNumber[0]; ig++) {
-            u1.push(u[i] + ' (' + (ig + 1) + ')')
+            u1.push(u[i] + ' (' + (ig + 1) + ')') // 存入数组中
           }
         } else {
-          u1.push(u[i])
+          u1.push(u[i]) // 如果没有倍数文本，则直接存入数组中
           continue
         }
       }
-      // console.log(u1)
+      // 判断必填字段是否都填写了
       if (!this.title) {
         this.$toast('请输入活动名称')
       } else if (!this.desc) {
@@ -333,23 +306,27 @@ export default {
       } else if (this.quota > u.length) {
         this.$toast('中奖名额数不能大于参与用户的总数')
       } else {
-        let cjl = window.localStorage.getItem('cjList')
-
+        let cjl = window.localStorage.getItem('cjList') // 从本地读取配置
+        // 判断本地是否有配置项
         if (!cjl) {
+          // 赋值一个空的配置模板对象
           cjl = {
             cjList: []
           }
         } else {
           cjl = JSON.parse(cjl)
-          let cjlIndex = cjl.cjList.findIndex(item => item.title === this.title)
+          let cjlIndex = cjl.cjList.findIndex(item => item.title === this.title) // 判断是否已存在当前活动
           if (cjlIndex > -1 && !this.isEdit) {
             this.$toast.fail('活动已存在')
             return
           }
         }
+        // 判断是新建模式还是编辑模式
         if (this.isEdit) {
+          // 读取本地储存配置中的活动列表，并从路由参数获取活动标题并获得活动的索引值
           let cjlIndex = cjl.cjList.findIndex(item => item.title === this.$route.query.t)
           if (cjlIndex > -1) {
+            // 修改模式直接修改指定活动索引对象的属性
             cjl.cjList[cjlIndex].title = this.title
             cjl.cjList[cjlIndex].desc = this.desc
             cjl.cjList[cjlIndex].quota = this.quota
@@ -360,6 +337,7 @@ export default {
             return
           }
         } else {
+          // 新建模式直接 push 到数组中就好了
           cjl.cjList.push({
             title: this.title,
             desc: this.desc,
@@ -370,19 +348,9 @@ export default {
             status: this.status
           })
         }
-        window.localStorage.setItem('cjList', JSON.stringify(cjl))
+        window.localStorage.setItem('cjList', JSON.stringify(cjl)) // 保存到本地储存
         this.$toast.success(this.isEdit ? '修改成功' : '新建成功')
-        this.$router.go(-1)
-        // if (this.isEdit) {
-        //   this.$router.push({
-        //     name: 'info',
-        //     query: {
-        //       t: this.title
-        //     }
-        //   })
-        // } else {
-        //   this.$router.push('/')
-        // }
+        this.$router.go(-1) // 操作成功返回上层页面
       }
     }
   }
