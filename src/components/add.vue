@@ -62,7 +62,7 @@
               slot="left-icon"
               color="#ee0a24"
               size="17px"
-              style="margin-top: -3px; margin-right: 4px; vertical-align: middle;"
+              style="margin-top: -3px; margin-left: -.5px; margin-right: 4.5px; vertical-align: middle;"
             />
             <van-stepper
               slot="button"
