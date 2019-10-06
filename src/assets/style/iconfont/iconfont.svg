@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="ios-remove-circle" unicode="&#59013;" d="M512 800C282.2 800 96 613.8 96 384s186.2-416 416-416 416 186.2 416 416S741.8 800 512 800z m181-448h-362c-17 0-32 12-32 32s14.4 32 32 32h362c17.6 0 32-14.4 32-32s-14.4-32-32-32z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>
