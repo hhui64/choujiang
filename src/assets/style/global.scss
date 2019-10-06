@@ -1,0 +1,49 @@
+html {
+  margin: 0;
+  background-color: #f8f8f8;
+}
+
+.__title {
+  margin: 0;
+  padding: 35px 15px 15px;
+  color: rgba(69, 90, 100, 0.6);
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.ios-cell-button {
+  .b-icon {
+    margin-top: -3px;
+    margin-right: 10px;
+    font-size: 16px;
+    vertical-align: middle;
+    color: #3dc55e;
+  }
+  // .b-text {
+  // }
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  will-change: transform;
+  transition: all 500ms;
+  position: absolute;
+}
+.slide-right-enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+.slide-left-enter {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+.slide-left-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
