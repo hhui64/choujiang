@@ -203,14 +203,13 @@ export default {
         if (this.zjUser >= this.quota) return
         for (let i = 0; i < this.quota; i++) {
           let zu = this.user[this.rn(0, this.user.length - 1)]
-          // console.log(this.zjUser.includes(zu), zu)
           if (this.zjUser.includes(zu)) {
             // 判断是否抽重复了，绕回去递归重新抽
-            this.zjUser.splice(this.zjUser.findIndex(item => zu), 1) // 删除掉重复的项目
+            this.zjUser.splice(this.zjUser.findIndex(item => zu), 1) // 删除掉重复中奖的用户
             f() // 重新来过嘤嘤嘤
             break
           } else {
-            this.zjUser.push(zu)
+            this.zjUser.push(zu) // 不重复的直接存入数组
           }
         }
         return
@@ -239,8 +238,8 @@ export default {
         }
       }
     },
+    // 取随机数方法
     rn(lowerValue, upperValue) {
-      // 取随机数
       return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue)
     }
   }
