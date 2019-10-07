@@ -306,11 +306,18 @@ export default {
       } else if (this.quota > u.length) {
         this.$toast('中奖名额数不能大于参与用户的总数')
       } else {
-        // 获取活动在数组中的索引值
-        const cjIndex = this.cjList.findIndex(item => item.title === this.$route.query.t)
         // 判断是新建模式还是编辑模式
         if (this.isEdit) {
+          // 获取活动在数组中的索引值
+          const cjIndex = this.cjList.findIndex(item => item.title === this.$route.query.t)
           if (cjIndex > -1) {
+            if (
+              this.cjList[cjIndex].title !== this.title &&
+              this.cjList.filter(item => item.title === this.title).length >= 1
+            ) {
+              this.$toast.fail('活动已存在')
+              return
+            }
             // 修改模式直接修改指定活动索引对象的属性
             this.cjList[cjIndex].title = this.title
             this.cjList[cjIndex].desc = this.desc
@@ -322,6 +329,7 @@ export default {
             return
           }
         } else {
+          const cjIndex = this.cjList.findIndex(item => item.title === this.title)
           // 判断活动是否已存在
           if (cjIndex > -1) {
             this.$toast.fail('活动已存在')
