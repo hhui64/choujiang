@@ -33,8 +33,7 @@ export default {
   },
   mounted() {
     // 初始化时判断是否为旧版的储存方式（即使用 localStorage 储存的数据）
-    const cjl = window.localStorage.getItem('cjList'),
-      cjlF = null
+    const cjl = window.localStorage.getItem('cjList')
     if (cjl) {
       // 迁移至 localForage 设置的默认储存位置
       this.$vlf
@@ -47,11 +46,21 @@ export default {
           this.$toast.fail('初始化失败')
         })
     } else {
-      // 首次打开时写入本地储存一个初始值
+      // 判断是否首次打开
       this.$vlf
-        .setItem('cjl', { cjList: [] })
+        .getItem('cjl')
         .then(value => {
-          // ...
+          // 首次打开时写入本地储存一个初始值
+          if (!value) {
+            this.$vlf
+              .setItem('cjl', { cjList: [] })
+              .then(value => {
+                // ...
+              })
+              .catch(err => {
+                this.$toast.fail('初始化失败')
+              })
+          }
         })
         .catch(err => {
           this.$toast.fail('初始化失败')
