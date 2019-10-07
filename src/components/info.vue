@@ -227,7 +227,7 @@ export default {
             // 修改指定活动的开奖状态和中奖用户
             cjList[cjIndex].status = this.status
             cjList[cjIndex].zjUser = this.zjUser
-            // 保存到本地储存
+            // 写入本地储存
             this.$vlf
               .setItem('cjl', { cjList: cjList })
               .then(value => {
