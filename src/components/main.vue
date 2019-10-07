@@ -87,15 +87,15 @@ export default {
     },
     output() {
       // 导出数据
-      const setting = window.localStorage.getItem('cjList')
-      this.$copyText(CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(setting))).then(
-        res => {
-          this.$toast.success('导出成功')
-        },
-        err => {
-          this.$toast.fail('导出成功')
-        }
-      )
+      // const setting = window.localStorage.getItem('cjList')
+      // this.$copyText(CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(setting))).then(
+      //   res => {
+      //     this.$toast.success('导出成功')
+      //   },
+      //   err => {
+      //     this.$toast.fail('导出成功')
+      //   }
+      // )
     }
   },
   mounted() {

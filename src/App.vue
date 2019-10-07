@@ -44,7 +44,17 @@ export default {
           window.localStorage.removeItem('cjList')
         })
         .catch(err => {
-          // console.log(err)
+          this.$toast.fail('初始化失败')
+        })
+    } else {
+      // 首次打开时写入本地储存一个初始值
+      this.$vlf
+        .setItem('cjl', { cjList: [] })
+        .then(value => {
+          // ...
+        })
+        .catch(err => {
+          this.$toast.fail('初始化失败')
         })
     }
   }
