@@ -174,31 +174,31 @@ export default {
     }
   },
   mounted() {
-    let cjl = window.localStorage.getItem('cjList')
-    cjl = JSON.parse(cjl) || null
-    let cjList = cjl.cjList || []
-    this.cjList = cjList
-    // 判断是否编辑模式
-    if (this.$route.query.t) {
-      this.isEdit = true
-      if (!cjl) {
-        this.$router.push('/')
-        return
-      } else {
-        // cjl = JSON.parse(cjl)
-        let cj = cjList.find(item => item.title === this.$route.query.t)
-        if (!cj) {
-          this.$router.push('/')
+    // 加载活动数据
+    this.$vlf
+      .getItem('cjl')
+      .then(value => {
+        this.cjList = value.cjList
+        // 判断是否编辑模式
+        if (this.$route.query.t) {
+          this.isEdit = true
+          // 编辑模式下，获取活动信息并赋值
+          const cj = this.cjList.find(item => item.title === this.$route.query.t)
+          if (!cj) this.$router.push('/')
+          this.title = cj.title
+          this.desc = cj.desc
+          this.jpList = cj.jpList
+          this.user = cj.user.join('\n')
+          // this.zjUser = cj.zjUser
+          this.quota = cj.quota
+          this.status = cj.status
+        } else {
+          this.isEdit = false
         }
-        this.title = cj.title
-        this.desc = cj.desc
-        this.jpList = cj.jpList
-        this.user = cj.user.join('\n')
-        // this.zjUser = cj.zjUser
-        this.quota = cj.quota
-        this.status = cj.status
-      }
-    }
+      })
+      .catch(err => {
+        this.$router.push('/')
+      })
   },
   methods: {
     addJp() {
@@ -306,39 +306,29 @@ export default {
       } else if (this.quota > u.length) {
         this.$toast('中奖名额数不能大于参与用户的总数')
       } else {
-        let cjl = window.localStorage.getItem('cjList') // 从本地读取配置
-        // 判断本地是否有配置项
-        if (!cjl) {
-          // 赋值一个空的配置模板对象
-          cjl = {
-            cjList: []
-          }
-        } else {
-          cjl = JSON.parse(cjl)
-          let cjlIndex = cjl.cjList.findIndex(item => item.title === this.title) // 判断是否已存在当前活动
-          if (cjlIndex > -1 && !this.isEdit) {
-            this.$toast.fail('活动已存在')
-            return
-          }
-        }
+        // 获取活动在数组中的索引值
+        const cjIndex = this.cjList.findIndex(item => item.title === this.$route.query.t)
         // 判断是新建模式还是编辑模式
         if (this.isEdit) {
-          // 读取本地储存配置中的活动列表，并从路由参数获取活动标题并获得活动的索引值
-          let cjlIndex = cjl.cjList.findIndex(item => item.title === this.$route.query.t)
-          if (cjlIndex > -1) {
+          if (cjIndex > -1) {
             // 修改模式直接修改指定活动索引对象的属性
-            cjl.cjList[cjlIndex].title = this.title
-            cjl.cjList[cjlIndex].desc = this.desc
-            cjl.cjList[cjlIndex].quota = this.quota
-            cjl.cjList[cjlIndex].jpList = jpListPlus || this.jpList
-            cjl.cjList[cjlIndex].user = u1 || u || []
+            this.cjList[cjIndex].title = this.title
+            this.cjList[cjIndex].desc = this.desc
+            this.cjList[cjIndex].quota = this.quota
+            this.cjList[cjIndex].jpList = jpListPlus || this.jpList
+            this.cjList[cjIndex].user = u1 || u || []
           } else {
             this.$toast.fail('修改失败')
             return
           }
         } else {
+          // 判断活动是否已存在
+          if (cjIndex > -1) {
+            this.$toast.fail('活动已存在')
+            return
+          }
           // 新建模式直接 push 到数组中就好了
-          cjl.cjList.push({
+          this.cjList.push({
             title: this.title,
             desc: this.desc,
             jpList: jpListPlus || this.jpList,
@@ -348,9 +338,17 @@ export default {
             status: this.status
           })
         }
-        window.localStorage.setItem('cjList', JSON.stringify(cjl)) // 保存到本地储存
-        this.$toast.success(this.isEdit ? '修改成功' : '新建成功')
-        this.$router.go(-1) // 操作成功返回上层页面
+        // 写入本地储存
+        this.$vlf
+          .setItem('cjl', { cjList: this.cjList })
+          .then(value => {
+            this.$toast.success(this.isEdit ? '修改成功' : '创建成功')
+            this.$router.go(-1) // 操作成功返回上层页面
+          })
+          .catch(err => {
+            this.$toast.success(this.isEdit ? '修改失败' : '创建失败')
+            this.$router.go(-1) // 同上
+          })
       }
     }
   }

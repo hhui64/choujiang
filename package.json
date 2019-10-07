@@ -1,6 +1,6 @@
 {
   "name": "choujiang",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "repository": {
     "type": "git",
     "url": "git@github.com:hhui64/choujiang.git"
@@ -16,8 +16,8 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "crypto-js": "^3.1.9-1",
-    "element-ui": "^2.12.0",
     "vant": "^2.2.5",
+    "vlf": "^1.0.5",
     "vue": "^2.6.10",
     "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.1.3"

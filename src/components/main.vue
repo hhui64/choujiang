@@ -99,15 +99,14 @@ export default {
     }
   },
   mounted() {
-    let cjl = window.localStorage.getItem('cjList')
-    if (!cjl) {
-      cjl = {
-        cjList: []
-      }
-    } else {
-      cjl = JSON.parse(cjl)
-      this.cjList = cjl.cjList
-    }
+    this.$vlf
+      .getItem('cjl')
+      .then(value => {
+        this.cjList = value.cjList
+      })
+      .catch(err => {
+        this.cjList = []
+      })
   }
 }
 </script>
